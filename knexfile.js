@@ -2,29 +2,53 @@
 
 module.exports = {
   development: {
-    client: 'sqlite3',
+    client: "sqlite3",
     connection: {
-      filename: './data/hobbits.db3',
+      filename: "./data/db.sqlite3"
     },
-    useNullAsDefault: true,
     migrations: {
-      directory: './data/migrations',
+      directory: "./data/migrations"
     },
     seeds: {
-      directory: './data/seeds',
+      directory: "./data/seeds"
     },
+    useNullAsDefault: true,
+    pool: {
+      afterCreate: (connection, done) => {
+        connection.run("PRAGMA foreign_keys = ON", done);
+      }
+    }
   },
+
   testing: {
-    client: 'sqlite3',
+    client: "sqlite3",
     connection: {
-      filename: './data/test.db3',
+      filename: "./data/test.sqlite3"
     },
-    useNullAsDefault: true,
     migrations: {
-      directory: './data/migrations',
+      directory: "./data/migrations"
     },
     seeds: {
-      directory: './data/seeds',
+      directory: "./data/seeds"
     },
+    useNullAsDefault: true,
+    pool: {
+      afterCreate: (connection, done) => {
+        connection.run("PRAGMA foreign_keys = ON", done);
+      }
+    }
   },
+
+  
+  production: {
+    client: "pg",
+    connection: process.env.DATABASE_URL,
+        migrations: {
+      directory: "./data/migrations"
+    },
+    seeds: {
+      directory: "./data/seeds"
+    },
+    useNullAsDefault: true,
+  }
 };
