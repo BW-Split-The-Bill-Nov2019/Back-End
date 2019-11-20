@@ -18,9 +18,10 @@ router.get("/", async (req, res, next) => {
 
 router.get("/pending/:username", async (req, res, next) => {
   try {
-    const allBills = await Bills.getAllPendingPayments(req.params.username);
-    res.status(200).json(allBills)
-    
+    const allBills = await Promise.all(await Bills.getAllPendingPayments(req.params.username));
+    // res.status(200).json(allBills)
+    res.status(200).json({allBills})
+    console.log("all bills from get request", allBills)
     // res.status(200).json({
     //   pending: {
     //     owesYou: [{friend: "Steve", amount: 12 }, ],

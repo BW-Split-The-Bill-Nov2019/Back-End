@@ -25,7 +25,7 @@ function getById(id) {
 //read
 function getAllBillsByUsername(username) {
   return db("billsplit")
-    .where({ host: username })
+    .where({ owner: username })
 }
 
 // read 
@@ -33,12 +33,17 @@ async function getAllPendingPayments(username) {
   const IDsOfBillsThatUserHosts = await getAllBillsByUsername(username)
     .map(bill => bill.id)
 
-  const pendingPayments = IDsOfBillsThatUserHosts.map(billId => {
-     db
-      .select('bs.total', 'bs.date', 'f.username', 'f.id as friendId')
-      .from('billsplit as bs')
-      .join("friends as f", "f.billSplitID", billId )
+    console.log('IDS of bills that user hosts', IDsOfBillsThatUserHosts)
+
+  const pendingPayments = IDsOfBillsThatUserHosts.map(async billId => {
+     return db
+      // .select('bs.total', 'bs.date', 'f.username', 'f.id as friendId')
+      .select('*')
+      // .from('billsplit as bs')
+      // .join("friends as f", "f.billSplitID", billId )
+      .from('friends as f')
       .where({paid: false})
+      .join('billsplit as bs', 'f.billSplitID', await billId)
   })
 
   console.log('PENDING PAYMENTS', pendingPayments)
