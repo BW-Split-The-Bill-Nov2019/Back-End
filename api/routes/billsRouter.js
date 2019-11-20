@@ -7,7 +7,7 @@ router.use(express.json());
 
 //read
 //use 'localhost:4444/api/bills/'
-router.get("/", async (req, res, next) => {
+router.get("/", myprivate, async (req, res, next) => {
   try {
     const users = await Bills.get();
     res.status(200).json(users);
@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/pending/:username", async (req, res, next) => {
+router.get("/pending/:username", myprivate, async (req, res, next) => {
   try {
     const allBills = await Promise.all(await Bills.getAllPendingPayments(req.params.username));
     // res.status(200).json(allBills)
@@ -79,7 +79,7 @@ router.post("/", myprivate, async (req, res) => {
 
 //delete
 //use 'localhost:4444/api/bills/:id'
-router.delete("/:id", myprivate, (req, res) => {
+router.delete("/:id", myprivate, myprivate, (req, res) => {
   Bills.remove(req.params.id)
     .then(bill => {
       if (bill) {
@@ -95,7 +95,7 @@ router.delete("/:id", myprivate, (req, res) => {
 
 //update
 //use 'localhost:4444/api/bills/:id'
-router.put('/:id', (req, res) => {
+router.put('/:id', myprivate, (req, res) => {
   const changes = req.body
   Bills.update(req.params.id, changes)
   .then(bill => {
