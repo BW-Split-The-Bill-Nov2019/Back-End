@@ -37,7 +37,6 @@ router.post("/register", (req, res) => {
 //use 'localhost:4444/api/auth/login'
 router.post("/login", (req, res) => {
   let { username, password } = req.body;
-  console.log({username, password})
   Users.getBy(username)
     .first()
     .then(user => {
