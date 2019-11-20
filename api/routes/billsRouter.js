@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Bills = require("../../data/models/billsModel");
+const Friends = require('../../data/models/friendsModel')
 const { myprivate } = require("../middleware/requireValidToken");
 router.use(express.json());
 
@@ -17,17 +18,42 @@ router.get("/", async (req, res, next) => {
 
 //create
 //use 'localhost:4444/api/bills/'
-router.post("/", myprivate, (req, res) => {
-  let bill = req.body;
-  Bills.insert(bill)
-    .then(saved => {
-      res.status(200).json(saved);
-    })
-    .catch(error => {
-      console.error(error)
-      res.status(500).json({message: "internal server error"});
-    });
-});
+router.post("/", myprivate, async (req, res) => {
+  try {
+    let bill = req.body;
+    const billSplitDetails = await Bills.insert({ 
+        billName: bill.billName, 
+        owner: bill.owner,
+        total: bill.total,
+        date: bill.date
+      })    
+
+      Promise.all(bill.friends.map(friend => 
+        Friends.insert({
+          billSplitID: billSplitDetails.id,
+          username: friend.username,
+          paid: friend.paid
+        })
+      ))
+      .then(friendDetails => {
+        console.log('FRIEND DETAILS', friendDetails)
+  
+        res.status(200).json({
+          billSplit: {...billSplitDetails},
+          friends: [...friendDetails]
+        });
+      })
+      .catch(error => {
+        console.error(error)
+        // res.status(500).json({message: "internal server error"});
+        res.status(500).json({message: "Trouble inserting into the friends table"});
+      })
+  } catch(e) {
+    console.error(error)
+    // res.status(500).json({message: "internal server error"});
+    res.status(500).json({message: "Trouble inserting into the bills table"});
+  }
+})
 
 //delete
 //use 'localhost:4444/api/bills/:id'

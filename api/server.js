@@ -9,7 +9,7 @@ server.use(express.json())
 serverConfig(server)
 
 server.use('/api/auth', authRoute); //localhost:4444/api/auth
-server.use('./api/bills', billsRouter); //localhost:4444/api/bills
-server.use('./api/friends', friendsRouter); //localhost:4444/api/friends
+server.use('/api/bills', billsRouter); //localhost:4444/api/bills
+server.use('/api/friends', friendsRouter); //localhost:4444/api/friends
 
 module.exports = server;
