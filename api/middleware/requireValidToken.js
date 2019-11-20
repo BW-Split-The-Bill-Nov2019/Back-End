@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 let secrets = require('../secret');
-secrets = secrets[process.env.NODE_ENV];
+secrets = secrets[process.env.DB_ENV];
 
 module.exports = {
   myprivate: function(req, res, next) {
@@ -12,16 +12,5 @@ module.exports = {
       req.decodedToken = decodedToken;
       next();
     });
-  },
-  generateToken: function(user) {
-    const payload = {
-      subject: user.id,
-      username: user.username,
-      roles: user.roles_id
-    };
-    const options = {
-      expiresIn: `24h`,
-    };
-    return jwt.sign(payload, secrets.jwtSecret, options);
   },
 };

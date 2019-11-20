@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Users = require("../../data/models/usersModel");
 const bcrypt = require("bcryptjs");
-const { generateToken } = require("../middleware/auth");
+const jwt = require("jsonwebtoken");
+let secrets = require('../secret');
+secrets = secrets[process.env.DB_ENV];
 router.use(express.json());
 
 
@@ -77,5 +79,17 @@ router.put('/:id', (req, res) => {
   })
 })
 
+
+function generateToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username,
+    roles: user.roles_id
+  };
+  const options = {
+    expiresIn: `24h`,
+  };
+  return jwt.sign(payload, secrets.jwtSecret, options);
+}
 
 module.exports = router;
