@@ -7,7 +7,6 @@ router.use(express.json());
 //read
 //use 'localhost:4444/api/friends/'
 router.get("/", async (req, res, next) => {
-    console.log(req.body)
   try {
     const users = await Friends.get();
     res.status(200).json(users);
