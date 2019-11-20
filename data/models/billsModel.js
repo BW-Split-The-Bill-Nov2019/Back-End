@@ -3,7 +3,8 @@ const db = require("../dbConfig");
 module.exports = {
   get,
   getById,
-  getBy,
+  getAllBillsByUsername,
+  getAllPendingPayments,
   insert,
   update,
   remove
@@ -22,10 +23,26 @@ function getById(id) {
 }
 
 //read
-function getBy(name) {
+function getAllBillsByUsername(username) {
   return db("billsplit")
-    .where({ name })
-    .first();
+    .where({ host: username })
+}
+
+// read 
+async function getAllPendingPayments(username) {
+  const IDsOfBillsThatUserHosts = await getAllBillsByUsername(username)
+    .map(bill => bill.id)
+
+  const pendingPayments = IDsOfBillsThatUserHosts.map(billId => {
+     db
+      .select('bs.total', 'bs.date', 'f.username', 'f.id as friendId')
+      .from('billsplit as bs')
+      .join("friends as f", "f.billSplitID", billId )
+      .where({paid: false})
+  })
+
+  console.log('PENDING PAYMENTS', pendingPayments)
+  return pendingPayments
 }
 
 //update
