@@ -9,8 +9,8 @@ router.use(express.json());
 //use 'localhost:4444/api/bills/'
 router.get("/", myprivate, async (req, res, next) => {
   try {
-    const users = await Bills.get();
-    res.status(200).json(users);
+    const bills = await Bills.get();
+    res.status(200).json(bills);
   } catch (err) {
     next(err);
   }
