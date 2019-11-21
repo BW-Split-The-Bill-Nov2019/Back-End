@@ -4,12 +4,13 @@ const Users = require("../../data/models/usersModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 let secrets = require('../secret');
+const { myprivate } = require("../middleware/requireValidToken");
 secrets = secrets[process.env.DB_ENV];
 router.use(express.json());
 
 
 //use 'localhost:4444/api/auth/'
-router.get("/", async (req, res, next) => {
+router.get("/", myprivate, async (req, res, next) => {
   try {
     const users = await Users.get();
     res.status(200).json(users);
@@ -56,7 +57,7 @@ router.post("/login", (req, res) => {
 });
 
 //use 'localhost:4444/api/auth/:id'
-router.delete("/:id", (req, res) => {
+router.delete("/:id", myprivate, (req, res) => {
   Users.remove(req.params.id)
     .then(user => {
       if (user) {
@@ -71,7 +72,7 @@ router.delete("/:id", (req, res) => {
 });
 
 //use 'localhost:4444/api/auth/:id'
-router.put('/:id', (req, res) => {
+router.put('/:id', myprivate, (req, res) => {
   const changes = req.body
   Users.update(req.params.id, changes)
   .then(user => {
