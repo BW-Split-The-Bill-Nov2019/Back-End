@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  testing: {
+  test: {
     client: "sqlite3",
     connection: {
       filename: "./data/test.sqlite3"
