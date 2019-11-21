@@ -25,7 +25,7 @@ router.get("/pending/:username", async (req, res, next) => {
     // res.status(200).json({allBills})
     // console.log("all bills from get request", allBills)
 
-    const firstPendingPayment = await Bills.getAllPendingPayments(req.params.username)
+    const friendsThatOweYou = await Bills.getAllPendingPayments(req.params.username)
     // res.status(200).json({
     //   pending: {
     //     owesYou: [{friend: "Steve", amount: 12 }, ],
@@ -37,11 +37,13 @@ router.get("/pending/:username", async (req, res, next) => {
     //     youPaid: [{}]
     //   }
     // });
-    res.sttatus(200).json({ firstPendingPayment })
+    res.status(200).json({ friendsThatOweYou })
   } catch (err) {
     next(err);
   }
 });
+
+
 
 //create
 //use 'localhost:4444/api/bills/'
@@ -64,8 +66,6 @@ router.post("/", async (req, res) => {
         })
       ))
       .then(friendDetails => {
-        console.log('FRIEND DETAILS', friendDetails)
-  
         res.status(200).json({
           billSplit: {...billSplitDetails},
           friends: [...friendDetails]
