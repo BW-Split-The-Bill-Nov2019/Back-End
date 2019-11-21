@@ -29,16 +29,16 @@ function getBy(username) {
 }
 
 //update
-function update(id, user) {
+function update(username, changes) {
   return db("users")
-    .where({ id })
-    .update(user);
+    .where({ username })
+    .update(changes);
 }
 
 //delete
-function remove(id) {
+function remove(username) {
   return db("users")
-    .where({ id })
+    .where({ username })
     .del();
 }
 
