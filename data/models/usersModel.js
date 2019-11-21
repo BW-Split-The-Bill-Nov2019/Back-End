@@ -44,13 +44,17 @@ function remove(id) {
 
 //create
 async function insert(user) {
-  if (process.env.NODE_ENV === "production") {
-    const [newUser] = await db("users").insert(user, ["id"]);
-    return findById(newUser.id);
-  } else {
-    const [id] = await db("users").insert(user);
-    return findById(id);
-  }
+  // if (process.env.NODE_ENV === "production") {
+  //   const [newUser] = await db("users").insert(user, ["id"]);
+  //   return findById(newUser.id);
+  // } else {
+  //   const [id] = await db("users").insert(user);
+  //   return findById(id);
+  // }
+
+  const [id] = await db("users").insert(user);
+  return findById(id);
+
 }
 
 //read
