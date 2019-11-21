@@ -16,9 +16,39 @@ router.get("/", myprivate, async (req, res, next) => {
   }
 });
 
+// router.get("/pending/:username", myprivate, async (req, res, next) => {
+router.get("/pending/:username", async (req, res, next) => {
+  try {
+    // const allBills = await Promise.all(await Bills.getAllPendingPayments(req.params.username));
+    // const allBills = await Promise.all(await Bills.getAllPendingPayments(req.params.username));
+    // res.status(200).json(allBills)
+    // res.status(200).json({allBills})
+    // console.log("all bills from get request", allBills)
+
+    const friendsThatOweYou = await Bills.getAllPendingPayments(req.params.username)
+    // res.status(200).json({
+    //   pending: {
+    //     owesYou: [{friend: "Steve", amount: 12 }, ],
+    //     youOwe: [{friend: "John", amount: 13}]
+    //   },
+
+    //   paid: {
+    //     paidYou: [{friend: "Steve", amount: 24}],
+    //     youPaid: [{}]
+    //   }
+    // });
+    res.status(200).json({ friendsThatOweYou })
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+
 //create
 //use 'localhost:4444/api/bills/'
-router.post("/", myprivate, async (req, res) => {
+// router.post("/", myprivate, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     let bill = req.body;
     const billSplitDetails = await Bills.insert({ 
@@ -36,8 +66,6 @@ router.post("/", myprivate, async (req, res) => {
         })
       ))
       .then(friendDetails => {
-        console.log('FRIEND DETAILS', friendDetails)
-  
         res.status(200).json({
           billSplit: {...billSplitDetails},
           friends: [...friendDetails]
@@ -49,7 +77,7 @@ router.post("/", myprivate, async (req, res) => {
         res.status(500).json({message: "Trouble inserting into the friends table"});
       })
   } catch(e) {
-    console.error(error)
+    console.error(e)
     // res.status(500).json({message: "internal server error"});
     res.status(500).json({message: "Trouble inserting into the bills table"});
   }
@@ -57,7 +85,7 @@ router.post("/", myprivate, async (req, res) => {
 
 //delete
 //use 'localhost:4444/api/bills/:id'
-router.delete("/:id", myprivate, (req, res) => {
+router.delete("/:id", myprivate, myprivate, (req, res) => {
   Bills.remove(req.params.id)
     .then(bill => {
       if (bill) {
@@ -73,7 +101,7 @@ router.delete("/:id", myprivate, (req, res) => {
 
 //update
 //use 'localhost:4444/api/bills/:id'
-router.put('/:id', (req, res) => {
+router.put('/:id', myprivate, (req, res) => {
   const changes = req.body
   Bills.update(req.params.id, changes)
   .then(bill => {

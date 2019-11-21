@@ -6,7 +6,7 @@ router.use(express.json());
 
 //read
 //use 'localhost:4444/api/friends/'
-router.get("/", async (req, res, next) => {
+router.get("/", myprivate, async (req, res, next) => {
   try {
     const users = await Friends.get();
     res.status(200).json(users);
@@ -47,7 +47,7 @@ router.delete("/:id", myprivate, (req, res) => {
 
 //update
 //use 'localhost:4444/api/friends/:id'
-router.put('/:id', (req, res) => {
+router.put('/:id', myprivate, (req, res) => {
   const changes = req.body
   Friends.update(req.params.id, changes)
   .then(friend => {
