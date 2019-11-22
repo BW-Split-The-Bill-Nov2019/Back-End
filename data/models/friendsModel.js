@@ -44,13 +44,8 @@ function remove(id) {
 
 //create
 async function insert(friend) {
-  if (process.env.NODE_ENV === "production") {
-    const [newFriend] = await db("friends").insert(friend, ["id"]);
-    return findById(newFriend.id);
-  } else {
-    const [id] = await db("friends").insert(friend);
-    return findById(id);
-  }
+  const [id] = await db("friends").insert(friend);
+  return findById(id)
 }
 
 //read

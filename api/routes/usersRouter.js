@@ -57,8 +57,8 @@ router.post("/login", (req, res) => {
 });
 
 //use 'localhost:4444/api/auth/:id'
-router.delete("/:id", myprivate, (req, res) => {
-  Users.remove(req.params.id)
+router.delete("/:username", (req, res) => {
+  Users.remove(req.params.username)
     .then(user => {
       if (user) {
         res.status(200).json(user);
@@ -72,9 +72,9 @@ router.delete("/:id", myprivate, (req, res) => {
 });
 
 //use 'localhost:4444/api/auth/:id'
-router.put('/:id', myprivate, (req, res) => {
+router.put('/:username', (req, res) => {
   const changes = req.body
-  Users.update(req.params.id, changes)
+  Users.update(req.params.username, changes)
   .then(user => {
       res.status(200).json(user)
   })
